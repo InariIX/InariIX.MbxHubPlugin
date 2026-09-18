@@ -8,19 +8,19 @@
   "icon": "Assets/icon.svg",
   "entrypoints": {
     "win-x64": {
-      "executable": "runtimes/win-x64/InariIx.MbxHubPlugin.dll",
+      "executable": "runtimes/win-x64/InariIX.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     },
     "osx-arm64": {
-      "executable": "runtimes/osx-arm64/InariIx.MbxHubPlugin.dll",
+      "executable": "runtimes/osx-arm64/InariIX.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     },
     "osx-x64": {
-      "executable": "runtimes/osx-x64/InariIx.MbxHubPlugin.dll",
+      "executable": "runtimes/osx-x64/InariIX.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     },
     "linux-x64": {
-      "executable": "runtimes/linux-x64/InariIx.MbxHubPlugin.dll",
+      "executable": "runtimes/linux-x64/InariIX.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     }
   },
@@ -30,7 +30,7 @@
     "url": "https://github.com/InariIX"
   },
   "license": "MIT",
-  "repository": "https://github.com/InariIX/mbxhub-plugin",
+  "repository": "https://github.com/InariIX/InariIX.MbxHubPlugin",
   "compatibility": {
     "macroDeck": ">=3.0.0-0"
   },
