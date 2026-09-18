@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Builds MacroDeck.MbxHubPlugin and packs it into a .macroDeckPlugin artifact.
+    Builds InariIx.MbxHubPlugin and packs it into a .macroDeckPlugin artifact.
 
 .DESCRIPTION
     Mirrors the workflow documented in the Macro-Deck-Sample-Plugins README:
@@ -98,7 +98,7 @@ Install the CLI for the full build/pack/validate flow:
     foreach ($r in $rids) {
         Write-Host "`n== Publishing $r ==" -ForegroundColor Yellow
         Invoke-Checked dotnet @(
-            'publish', 'MacroDeck.MbxHubPlugin.csproj',
+            'publish', 'InariIx.MbxHubPlugin.csproj',
             '-c', 'Release', '-r', $r, '--self-contained', 'false', '-p:UseAppHost=false',
             '-o', "bin/publish/$r"
         )

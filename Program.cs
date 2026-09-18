@@ -1,4 +1,4 @@
-using MacroDeck.MbxHubPlugin;
+using InariIx.MbxHubPlugin;
 using MacroDeck.Plugin.Hosting;
 using MacroDeck.Plugin.Serilog;
 

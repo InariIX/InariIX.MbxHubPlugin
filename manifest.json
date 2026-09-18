@@ -1,26 +1,26 @@
 {
   "$schema": "https://schemas.macro-deck.app/plugin-manifest-v1.schema.json",
   "manifestVersion": 1,
-  "id": "app.macro-deck.mbxhub",
+  "id": "com.inariix.mbxhub-plugin",
   "name": "MBXHub (MusicBee)",
   "version": "0.1.4",
   "description": "Control MusicBee through MBXHub: transport, love toggle, shuffle, playlist selection, and a Music Player widget with album art and progress.",
   "icon": "Assets/icon.svg",
   "entrypoints": {
     "win-x64": {
-      "executable": "runtimes/win-x64/MacroDeck.MbxHubPlugin.dll",
+      "executable": "runtimes/win-x64/InariIx.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     },
     "osx-arm64": {
-      "executable": "runtimes/osx-arm64/MacroDeck.MbxHubPlugin.dll",
+      "executable": "runtimes/osx-arm64/InariIx.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     },
     "osx-x64": {
-      "executable": "runtimes/osx-x64/MacroDeck.MbxHubPlugin.dll",
+      "executable": "runtimes/osx-x64/InariIx.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     },
     "linux-x64": {
-      "executable": "runtimes/linux-x64/MacroDeck.MbxHubPlugin.dll",
+      "executable": "runtimes/linux-x64/InariIx.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     }
   },
@@ -30,7 +30,7 @@
     "url": "https://github.com/InariIX"
   },
   "license": "MIT",
-  "repository": "https://github.com/InariIX/MacroDeck.MbxHubPlugin",
+  "repository": "https://github.com/InariIX/mbxhub-plugin",
   "compatibility": {
     "macroDeck": ">=3.0.0-0"
   },

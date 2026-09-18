@@ -1,7 +1,7 @@
-using MacroDeck.MbxHubPlugin.Mbx;
+using InariIx.MbxHubPlugin.Mbx;
 using MacroDeck.Sdk.MusicPlayer;
 
-namespace MacroDeck.MbxHubPlugin.Player;
+namespace InariIx.MbxHubPlugin.Player;
 
 /// <summary>
 /// The single MBXHub-backed player instance. Implements ICatalogMusicPlayer (transport + browsing)

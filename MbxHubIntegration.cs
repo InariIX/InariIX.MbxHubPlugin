@@ -1,14 +1,14 @@
-using MacroDeck.MbxHubPlugin.Actions;
-using MacroDeck.MbxHubPlugin.Config;
-using MacroDeck.MbxHubPlugin.Mbx;
-using MacroDeck.MbxHubPlugin.Player;
+using InariIx.MbxHubPlugin.Actions;
+using InariIx.MbxHubPlugin.Config;
+using InariIx.MbxHubPlugin.Mbx;
+using InariIx.MbxHubPlugin.Player;
 using MacroDeck.Sdk;
 using MacroDeck.Sdk.Actions;
 using MacroDeck.Sdk.ConfigFlow;
 using MacroDeck.Sdk.MusicPlayer;
 using MacroDeck.Sdk.Variables;
 
-namespace MacroDeck.MbxHubPlugin;
+namespace InariIx.MbxHubPlugin;
 
 /// <summary>
 /// One MBXHub connection per config entry. MBXHub talks to exactly one MusicBee process, so

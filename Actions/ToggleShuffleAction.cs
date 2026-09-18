@@ -1,7 +1,7 @@
 using MacroDeck.Localization;
 using MacroDeck.Sdk.Actions;
 
-namespace MacroDeck.MbxHubPlugin.Actions;
+namespace InariIx.MbxHubPlugin.Actions;
 
 /// <summary>
 /// Plain-button shuffle toggle. Shuffle is also part of MusicPlayerState/IMusicPlayer

@@ -2,7 +2,7 @@ using MacroDeck.Localization;
 using MacroDeck.Sdk.Actions;
 using MacroDeck.Sdk.ConfigFlow;
 
-namespace MacroDeck.MbxHubPlugin.Config;
+namespace InariIx.MbxHubPlugin.Config;
 
 /// <summary>
 /// Single-step flow collecting the host:port of the machine running MusicBee + MBXHub.

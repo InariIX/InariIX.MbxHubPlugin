@@ -1,6 +1,6 @@
-# MacroDeck.MbxHubPlugin
-Macro Deck 3 integration that adds a bridge to the MBXHub plugin for MusicBee.
-(docs:
+# InariIx.MbxHubPlugin
+
+Macro Deck 3 plugin controlling MusicBee through [MBXHub](https://mbxhub.com) (docs:
 https://mbxhub.com/docs.html, API: https://mbxhub.com/api.html).
 
 **Just want to install and use this?** See [SETUP.md](SETUP.md) instead — this file covers the
@@ -92,3 +92,4 @@ shows up later: swap the `-match` pattern for a keyword from the missing type's 
 `Macro-Deck-Sample-Plugins` repo demonstrates that interface, so its exact members weren't confirmed
 before writing this — worth checking with the reflection approach above, or `sdk-reference.md` in the
 main Macro Deck 3 repo (private at the time this was written), before implementing it.
+

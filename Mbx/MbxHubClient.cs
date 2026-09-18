@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace MacroDeck.MbxHubPlugin.Mbx;
+namespace InariIx.MbxHubPlugin.Mbx;
 
 /// <summary>
 /// Thin wrapper over MBXHub's REST API (https://mbxhub.com/api.html). MBXHub has no authentication -
