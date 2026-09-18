@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace InariIx.MbxHubPlugin.Mbx;
+namespace InariIX.MbxHubPlugin.Mbx;
 
 /// <summary>
 /// Most MBXHub endpoints wrap their payload as <c>{ "success": true, "data": {...} }</c> - confirmed

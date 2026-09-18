@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds InariIx.MbxHubPlugin and packs it into a .macroDeckPlugin artifact.
+# Builds InariIX.MbxHubPlugin and packs it into a .macroDeckPlugin artifact.
 #
 # Mirrors the Macro-Deck-Sample-Plugins README workflow:
 #   1. dotnet restore / dotnet build - fast compile check.
@@ -80,7 +80,7 @@ EOF
 	for r in "${rids[@]}"; do
 		echo
 		echo "== Publishing $r =="
-		dotnet publish InariIx.MbxHubPlugin.csproj \
+		dotnet publish InariIX.MbxHubPlugin.csproj \
 			-c Release -r "$r" --self-contained false -p:UseAppHost=false -o "bin/publish/$r"
 	done
 

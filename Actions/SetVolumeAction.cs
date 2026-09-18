@@ -1,7 +1,7 @@
 using MacroDeck.Localization;
 using MacroDeck.Sdk.Actions;
 
-namespace InariIx.MbxHubPlugin.Actions;
+namespace InariIX.MbxHubPlugin.Actions;
 
 /// <summary>
 /// TEMPORARY: a plain action rather than a slider. MacroDeck.SampleMusicPlayerPlugin's SetVolumeAction

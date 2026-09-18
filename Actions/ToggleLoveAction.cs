@@ -1,8 +1,8 @@
 using MacroDeck.Localization;
-using InariIx.MbxHubPlugin.Mbx;
+using InariIX.MbxHubPlugin.Mbx;
 using MacroDeck.Sdk.Actions;
 
-namespace InariIx.MbxHubPlugin.Actions;
+namespace InariIX.MbxHubPlugin.Actions;
 
 /// <summary>
 /// Toggles the love tag on whatever MusicBee is currently playing. MusicPlayerState (see

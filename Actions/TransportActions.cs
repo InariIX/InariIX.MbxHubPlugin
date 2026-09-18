@@ -1,8 +1,8 @@
 using MacroDeck.Localization;
-using InariIx.MbxHubPlugin.Mbx;
+using InariIX.MbxHubPlugin.Mbx;
 using MacroDeck.Sdk.Actions;
 
-namespace InariIx.MbxHubPlugin.Actions;
+namespace InariIX.MbxHubPlugin.Actions;
 
 /// <summary>
 /// Shared shape for a no-parameter action that just calls one MbxHubClient method. The Music Player

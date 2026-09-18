@@ -16,7 +16,7 @@ technical/architecture writeup see [README.md](README.md).
 ## 1. Install the plugin
 
 1. Download the `.macroDeckPlugin` file for your platform from the
-   [Releases](https://github.com/InariIX/mbxhub-plugin/releases) page.
+   [Releases](https://github.com/InariIX/InariIX.MbxHubPlugin/releases) page.
 2. In Macro Deck, open the plugin manager and install from the downloaded file.
 3. Restart Macro Deck if prompted.
 

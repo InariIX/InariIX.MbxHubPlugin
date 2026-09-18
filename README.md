@@ -1,4 +1,4 @@
-# InariIx.MbxHubPlugin
+# InariIX.MbxHubPlugin
 
 Macro Deck 3 plugin controlling MusicBee through [MBXHub](https://mbxhub.com) (docs:
 https://mbxhub.com/docs.html, API: https://mbxhub.com/api.html).
