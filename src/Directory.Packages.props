@@ -1,0 +1,20 @@
+<Project>
+
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+        <!-- Floats to the newest published Macro Deck packages, matching how the sample plugins repo
+             pins this - override per-build with `dotnet build -p:MacroDeckSdkVersion=<version>`. -->
+        <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
+        <MacroDeckSdkVersion Condition="'$(MacroDeckSdkVersion)' == ''">3.0.0-*</MacroDeckSdkVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageVersion Include="MacroDeck.Localization" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Plugin.Analyzers" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Plugin.Hosting" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Plugin.Serilog" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Sdk" Version="$(MacroDeckSdkVersion)" />
+    </ItemGroup>
+
+</Project>

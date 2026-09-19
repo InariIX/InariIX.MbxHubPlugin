@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <UserSecretsId>InariIX.MbxHubPlugin-PluginDevelopment</UserSecretsId>
+    </PropertyGroup>
+
+    <!-- Microsoft.NET.Sdk plus this framework reference, not Microsoft.NET.Sdk.Web: a plugin is a
+         headless process, and the framework reference is what supplies the hosting surface
+         MacroDeck.Plugin.Hosting builds on. -->
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MacroDeck.Plugin.Analyzers" PrivateAssets="all" />
+        <PackageReference Include="MacroDeck.Localization" />
+        <PackageReference Include="MacroDeck.Plugin.Hosting" />
+        <PackageReference Include="MacroDeck.Plugin.Serilog" />
+        <PackageReference Include="MacroDeck.Sdk" />
+    </ItemGroup>
+
+    <!-- The SDK reads the manifest from the content root at startup and resolves the icon path
+         against that same root, so both have to land next to the built executable. -->
+    <ItemGroup>
+        <Content Include="manifest.json" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="Assets\icon.svg" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>
