@@ -12,5 +12,5 @@ jobs:
       id-token: write
     with:
       version: ${{ github.event.release.tag_name }}
-      source: "InariIX.MbxHubPlugin"
+      source: src/InariIX.MbxHubPlugin
       changelog: ${{ github.event.release.body }}
