@@ -1,0 +1,25 @@
+<Project>
+
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+        <!-- Pinned, not floating: MacroDeck's package channel names sort unfavorably under plain SemVer2
+             prerelease comparison ("preview" > "beta" alphabetically, since 'p' > 'b' - it does not
+             matter that beta releases came later chronologically). A floating "3.0.0-*" pattern
+             therefore locks onto old 3.0.0-preview.* builds forever instead of picking up newer
+             3.0.0-beta.* ones, and failed CI with "older than the minimum Macro Deck SDK version"
+             because of exactly that. Bump this pin by hand when the host requires a newer minimum -
+             floating cannot be trusted to do it correctly here. Override per-build if needed with
+             `dotnet build -p:MacroDeckSdkVersion=<version>`. -->
+        <MacroDeckSdkVersion Condition="'$(MacroDeckSdkVersion)' == ''">3.0.0-beta.11</MacroDeckSdkVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageVersion Include="MacroDeck.Localization" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Plugin.Analyzers" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Plugin.Hosting" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Plugin.Serilog" Version="$(MacroDeckSdkVersion)" />
+        <PackageVersion Include="MacroDeck.Sdk" Version="$(MacroDeckSdkVersion)" />
+    </ItemGroup>
+
+</Project>
