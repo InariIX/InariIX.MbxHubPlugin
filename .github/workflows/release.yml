@@ -1,0 +1,27 @@
+# Builds and publishes this plugin to the Macro Deck Creator Portal whenever a GitHub release is
+# published. See Macro-Deck-App/GitHub-Actions for the reusable workflow this calls.
+#
+# No secrets needed: auth is via GitHub's own OIDC token (id-token: write below), not a stored
+# credential.
+name: Release
+
+"on":
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    uses: Macro-Deck-App/GitHub-Actions/.github/workflows/publish-plugin.yml@v1
+    with:
+      # The tag name (e.g. "v0.1.5") passed straight through - the reusable workflow itself drops a
+      # leading "v" and writes this into manifest.json/the assembly version, so the version committed
+      # in the repo doesn't need to match what's actually released.
+      version: ${{ github.event.release.tag_name }}
+      # Repo root IS the plugin folder (manifest.json/macrodeck-build.json live here directly, not
+      # under a src/ subfolder) - confirmed against this repo's actual layout, not the unverified
+      # placeholder path used for the first draft of this file.
+      source: .
