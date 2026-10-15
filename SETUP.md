@@ -67,9 +67,8 @@ state to a rule on the matching variable (e.g. `mbxhub-shuffle == true`).
 **The plugin says it can't connect.** Double check MusicBee is running with MBXHub loaded, and that the
 host/port you entered match what MBXHub is actually using (see step 2).
 
-**Love toggle doesn't do anything.** This is a MusicBee/MBXHub setting, not the plugin — MBXHub ships
-with library-tag writes (love, star ratings) turned off by default. Open MBXHub's settings page
-(`http://<host>:<port>/pages/settings.html`) and turn off "read-only library tags."
+**Love toggle doesn't do anything.** In MBXHub's settings, open the **API Access** tab and make sure
+**Tag edits** and **Modify** are not set to read-only.
 
 **Everything else works but the player doesn't show up after restarting Macro Deck.** Try reconfiguring
 the connection (step 2) — if it still doesn't appear, restart Macro Deck once more; the plugin needs a

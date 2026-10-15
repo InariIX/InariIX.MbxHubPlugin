@@ -4,7 +4,7 @@
   "id": "com.inariix.mbxhub-plugin",
   "name": "MBXHub (MusicBee)",
   "version": "0.1.5",
-  "description": "Control MusicBee through MBXHub: transport, love toggle, shuffle, playlist selection, and a Music Player widget with album art and progress.",
+  "description": "Adds media controls for MusicBee through MBXHub.\n\nFeatures include:\nBasic playback controls\nLoved toggle* and playlist selection\n\nParty Mode and AutoQ are not implemented.\n\nDeveloped with AI assistance.\n\n*In MBXHub settings, API Access, make Tag edits and Modify writable (not read-only).",
   "icon": "Assets/icon.png",
   "entrypoints": {
     "win-x64": {
