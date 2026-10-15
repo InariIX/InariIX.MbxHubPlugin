@@ -112,10 +112,11 @@ A change is not done until all six hold:
    the matching versions are blocked. `reason` says why. Replace the package or restructure the code
    that needs it. Never work around a block by vendoring, renaming or loading the package some other
    way.
-3. **The Macro Deck SDK is at least `minimumSdkVersion`.** The Macro Deck packages float to the newest
-   published version by default, so this usually holds on its own. It stops holding when
-   `MacroDeckSdkVersion` is pinned, or when a build runs against `local-feed/`. A release must never be
-   built against an SDK older than the minimum.
+3. **The Macro Deck SDK and publishing CLI meet the current minimum versions.** The SDK must be at least
+   `minimumSdkVersion`, and the publishing workflow's `cli-version` must be at least `minimumCliVersion`.
+   The Macro Deck packages float to the newest published version by default, so the SDK usually holds
+   on its own. It stops holding when `MacroDeckSdkVersion` is pinned, or when a build runs against
+   `local-feed/`. A release must never be built with an SDK or CLI older than its minimum.
 4. **Only allowed Macro Deck packages are used.** Every package in the graph whose id starts with
    `MacroDeck.` must match an entry in `allowedMacroDeckPackages`. Anything else under that prefix is
    refused on upload, including packages from another Macro Deck repository that were never published

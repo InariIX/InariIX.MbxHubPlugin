@@ -25,3 +25,4 @@ jobs:
       # under a src/ subfolder) - confirmed against this repo's actual layout, not the unverified
       # placeholder path used for the first draft of this file.
       source: .
+      cli-version: 3.0.0-beta.17
