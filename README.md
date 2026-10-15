@@ -8,16 +8,16 @@ architecture, build process, and the API assumptions behind it.
 
 ## What it does
 
-- **Music Player widget** (album art, progress bar, transport) via `ICatalogMusicPlayer`
-  (`Player/MbxHubMusicPlayer.cs`) — this is the SDK's built-in surface for exactly this, so no custom
-  Macro Deck UI was needed for it.
-- **Transport**: play / pause / toggle / next / previous / seek / volume, all through the same
-  interface, and reachable from any button bound to it.
-- **Shuffle**: part of the same interface, plus a standalone `Toggle shuffle` button action.
-- **Love toggle**: a standalone `Toggle love` action + an `mbxhub_love` variable. Not part of the
-  Music Player widget — see "Known gaps" below for why.
-- **Playlist selection**: a `Play playlist` action with a picker populated live from MBXHub, plus
-  playlist browsing built into the widget's own catalogue browser.
+This plugin controls MusicBee only through MBXHub. It provides basic playback controls, a Loved
+toggle, and playlist selection. Party Mode and AutoQ are not implemented. The plugin's code was
+developed with AI assistance.
+
+The Loved toggle is a standalone action and variable, not part of the Music Player widget. For it to
+work, make sure **Tag edits** and **Modify** are writable (not read-only) in MBXHub's **API Access**
+settings.
+
+The Music Player widget provides album art, playback progress, transport controls, and playlist
+browsing.
 
 ## Setup
 

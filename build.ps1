@@ -91,7 +91,7 @@ This produces a runnable Windows x64 build under bin/publish/win-x64/, but NOT a
 .macroDeckPlugin artifact (only the CLI assembles and signs that).
 
 Install the CLI for the full build/pack/validate flow:
-    dotnet tool install --global MacroDeck.Plugin.Cli --version 3.0.0-preview.6
+    dotnet tool install --global MacroDeck.Plugin.Cli --version 3.0.0-preview.10
 "@
 
     foreach ($r in $rids) {
