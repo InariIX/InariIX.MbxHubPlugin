@@ -3,16 +3,11 @@ using MacroDeck.Sdk.Actions;
 
 namespace InariIX.MbxHubPlugin.Actions;
 
-/// <summary>
-/// TEMPORARY: a plain action rather than a slider. MacroDeck.SampleMusicPlayerPlugin's SetVolumeAction
-/// implements ISliderActionDefinition for two-way binding (a Slider widget shows and sets MBXHub's
-/// live volume), but those types didn't resolve against the actually-restored MacroDeck.Sdk package -
-/// the sample repo's checked-out source had drifted from what's published. Rather than guess at
-/// renamed types, this sets volume via a plain text parameter so the plugin builds; see README.md for
-/// how to find the real slider contract and restore two-way binding.
-/// </summary>
 internal sealed class SetVolumeAction(MbxHubIntegration integration) : IActionDefinition
 {
+	private const double MinVolume = 0;
+	private const double MaxVolume = 100;
+
 	public string Id => "set-volume";
 
 	public LocalizedText Name => "Set volume";
@@ -21,7 +16,11 @@ internal sealed class SetVolumeAction(MbxHubIntegration integration) : IActionDe
 
 	public IReadOnlyList<ActionParameter> Parameters { get; } =
 	[
-		ActionParameter.Text("volume", label: "Volume (%)", defaultValue: "60", required: true)
+		ActionParameter.Slider("volume", MinVolume, MaxVolume,
+			label: "Volume (%)",
+			description: "Sets MusicBee's playback volume.",
+			step: 1,
+			defaultValue: 60)
 	];
 
 	public IActionExecutor CreateExecutor() => new Executor(integration);
@@ -35,14 +34,17 @@ internal sealed class SetVolumeAction(MbxHubIntegration integration) : IActionDe
 				return ActionResult.Failed(ActionErrorCodes.InvalidParameter, "MBXHub isn't connected yet. Finish the plugin's configuration first.");
 			}
 
-			if (context.Parameters.GetValueOrDefault("volume") is not string { Length: > 0 } volumeText
-				|| !int.TryParse(volumeText, out var volume))
+			if (context.Parameters.GetValueOrDefault("volume") is not double volume
+				|| !double.IsFinite(volume)
+				|| volume < MinVolume
+				|| volume > MaxVolume
+				|| volume != Math.Truncate(volume))
 			{
 				return ActionResult.Failed(ActionErrorCodes.InvalidParameter,
 					MacroDeckStrings.Validation.InvalidValue("Volume (%)"));
 			}
 
-			await client.SetVolumeAsync(volume, context.CancellationToken);
+			await client.SetVolumeAsync((int)volume, context.CancellationToken);
 			return ActionResult.Success();
 		}
 	}

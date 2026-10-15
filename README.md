@@ -45,12 +45,8 @@ flagged with a comment at the point of use:
 - **`PUT /player/position` body field name** (`Mbx/MbxHubClient.cs`, `SeekAsync`) — not shown in the
   docs at all; assumed to follow the same convention as volume.
 - **Repeat mode SDK-enum mapping** (`Player/MbxHubMusicPlayer.cs`, `SetRepeatModeAsync`) — MBXHub's
-  accepted values are now confirmed live: `"none"` / `"one"` / `"all"` (exposed read-only via the
-  `mbxhub-repeat` variable too). What's *not* confirmed is the SDK's own `RepeatMode` enum member
-  names for the non-`Off` cases (only `RepeatMode.Off` has ever been confirmed by exact name via
-  reflection), so `SetRepeatModeAsync` fuzzy-matches `ToString()` for those rather than assuming exact
-  spellings like `Track`/`All`. Good enough to drive playback correctly; not precise enough to
-  populate `MusicPlayerState.RepeatMode` accurately when reporting state back (still omitted there).
+  accepted values are `"none"` / `"one"` / `"all"` (also exposed through the `mbxhub-repeat` variable).
+  These map directly to the SDK beta.17 `RepeatMode.Off`, `Track`, and `Context` values.
 - **`GET /playlists` item field name** — confirmed (`name`, not `title`) via HALRAD's own MCP sample
   in `halrad-com/mbxhub`; `title` is kept only as a defensive fallback, not because it's in doubt.
 
@@ -58,38 +54,10 @@ None of these will crash the plugin if wrong — they'll just no-op or read back
 but worth a quick check against a live MBXHub instance (e.g. `curl http://localhost:8082/player/volume`)
 before you rely on volume/shuffle/seek/repeat.
 
-## Restoring the volume slider (or fixing any other API drift)
+## SDK capabilities
 
-`SetVolumeAction` was downgraded to a plain text-parameter action because `ISliderActionDefinition` and
-`SliderActionState` don't exist under those names in the actually-published `MacroDeck.Sdk` package -
-the `Macro-Deck-Sample-Plugins` repo's checked-out source (what this plugin was originally built
-against) had drifted from what NuGet currently serves. `IVariableProvider` had the same kind of drift
-(`ProvidedVariables`/`GetValueAsync` → `Variables`/`ReadAsync`), but the compiler's `CS0535` errors
-spelled out the new names directly, so that one didn't need investigation - only the two vanished
-slider types did.
-
-To find what they're actually called now, inspect the real DLL you already have on disk (same
-principle as using ILSpy on the Macro Deck app itself - the published package is the source of truth,
-not any cached copy of sample source):
-
-```powershell
-$dll = Get-ChildItem "$env:USERPROFILE\.nuget\packages\macrodeck.sdk" -Recurse -Filter MacroDeck.Sdk.dll |
-    Sort-Object LastWriteTime -Descending | Select-Object -First 1
-[Reflection.Assembly]::LoadFrom($dll.FullName).GetTypes() |
-    Where-Object { $_.Name -match 'Slider' } |
-    Select-Object FullName
-```
-
-That lists every type with "Slider" in the name (interface, state record, whatever it's called now).
-Once you have the real name(s), `SetVolumeAction.cs` can go back to the two-way-binding shape - same
-structure as `MacroDeck.SampleMusicPlayerPlugin/Actions/SetVolumeAction.cs`, just with the corrected
-type name(s) and members swapped in.
-
-The same `[Reflection.Assembly]::LoadFrom(...).GetTypes()` approach works for any other CS0246 that
-shows up later: swap the `-match` pattern for a keyword from the missing type's name.
-
-**Live 2-state love button**: a heart icon that visually flips loved/not-loved on the button itself
-(rather than a plain toggle) would use `IStateProviderActionDefinition`. No sample plugin in the
-`Macro-Deck-Sample-Plugins` repo demonstrates that interface, so its exact members weren't confirmed
-before writing this — worth checking with the reflection approach above, or `sdk-reference.md` in the
-main Macro Deck 3 repo (private at the time this was written), before implementing it.
+The project pins the Macro Deck packages to `3.0.0-beta.17`. The standalone volume action uses the
+SDK's native slider parameter, and the Loved action reports live Loved and Not loved states through
+`IStateProviderActionDefinition`. It reports no state when MBXHub is disconnected or no track is
+playing. The Music Player widget continues to provide its own transport, volume, shuffle, repeat, and
+playlist controls.

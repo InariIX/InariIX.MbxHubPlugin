@@ -34,16 +34,12 @@ internal sealed class MbxHubMusicPlayer(MbxHubIntegration integration) : ICatalo
 			return MusicPlayerState.Unavailable("MBXHub isn't connected yet - finish the plugin's configuration first.");
 		}
 
-		// /nowplaying carries track + position + love; volume and shuffle live on separate endpoints.
-		// Three calls per poll - acceptable at the couple-second cadence a widget or button polls at,
-		// and it keeps each concern reading the one endpoint documented for it rather than guessing at
-		// a combined shape. Awaited individually after WhenAll rather than read via .Task.Result: AGENTS.md
-		// (MDP3002) bans .Result/.Wait() anywhere in a type implementing IMusicPlayer, whole-type, even
-		// where it's provably safe post-WhenAll - awaiting an already-completed task is just as cheap.
+		// MBXHub exposes player status across separate endpoints, so fetch them concurrently.
 		var nowPlayingTask = client.GetNowPlayingAsync(cancellationToken);
 		var volumeTask = client.GetVolumeAsync(cancellationToken);
 		var shuffleTask = client.GetShuffleAsync(cancellationToken);
-		await Task.WhenAll(nowPlayingTask, volumeTask, shuffleTask);
+		var repeatTask = client.GetRepeatRawAsync(cancellationToken);
+		await Task.WhenAll(nowPlayingTask, volumeTask, shuffleTask, repeatTask);
 
 		var nowPlaying = await nowPlayingTask;
 		if (nowPlaying is null)
@@ -64,12 +60,8 @@ internal sealed class MbxHubMusicPlayer(MbxHubIntegration integration) : ICatalo
 			Position = TimeSpan.FromMilliseconds(nowPlaying.PositionMs),
 			Duration = TimeSpan.FromMilliseconds(nowPlaying.DurationMs),
 			VolumePercent = await volumeTask,
-			ShuffleEnabled = await shuffleTask
-			// RepeatMode intentionally still omitted here even though the string values are now
-			// confirmed (see SetRepeatModeAsync) - populating this field needs the SDK's own RepeatMode
-			// enum member names for "one"/"all", and only RepeatMode.Off has ever been confirmed by
-			// exact name. Setting it correctly for playback control doesn't require that (a fuzzy
-			// ToString() match is enough there); reporting it back accurately here would.
+			ShuffleEnabled = await shuffleTask,
+			RepeatMode = ParseRepeatMode(await repeatTask)
 		};
 	}
 
@@ -111,19 +103,23 @@ internal sealed class MbxHubMusicPlayer(MbxHubIntegration integration) : ICatalo
 
 	public Task SetRepeatModeAsync(RepeatMode mode, CancellationToken cancellationToken = default)
 	{
-		// GET /player/repeat confirmed live (Jaylen): MBXHub cycles through exactly "none", "one",
-		// "all" - not the "off"/"track"/"all" originally guessed. RepeatMode.Off is the only SDK enum
-		// member ever confirmed by exact name (via reflection on the sample plugins); the other two
-		// weren't dumped the same way, so this matches Off with certainty and fuzzy-matches the rest
-		// against ToString() rather than assuming exact spellings like "Track"/"All".
-		var mbxValue = mode == RepeatMode.Off
-			? "none"
-			: mode.ToString().Contains("track", StringComparison.OrdinalIgnoreCase)
-				|| mode.ToString().Contains("one", StringComparison.OrdinalIgnoreCase)
-					? "one"
-					: "all";
+		var mbxValue = mode switch
+		{
+			RepeatMode.Off => "none",
+			RepeatMode.Track => "one",
+			RepeatMode.Context => "all",
+			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown repeat mode.")
+		};
 		return RequireClient().SetRepeatAsync(mbxValue, cancellationToken);
 	}
+
+	private static RepeatMode ParseRepeatMode(string? value)
+		=> value?.Trim().Trim('"').ToLowerInvariant() switch
+		{
+			"one" => RepeatMode.Track,
+			"all" => RepeatMode.Context,
+			_ => RepeatMode.Off
+		};
 
 	/// <summary>Catalogue scope kept to playlists for this MVP: MusicBee libraries can be huge, and
 	/// MBXHub's /library/search needs a minimum query length, so an unfiltered track browse has no
