@@ -5,6 +5,15 @@
   "name": "MBXHub (MusicBee)",
   "version": "0.1.5",
   "description": "Adds media controls for MusicBee through MBXHub.\n\nFeatures include:\nBasic playback controls\nLoved toggle* and playlist selection\n\nParty Mode and AutoQ are not implemented.\n\nDeveloped with AI assistance.\n\n*In MBXHub settings, API Access, make Tag edits and Modify writable (not read-only).",
+  "ai": {
+    "interaction": false,
+    "generatedContent": false,
+    "generatedAssets": false,
+    "services": [
+      "Claude",
+      "Copilot"
+    ]
+  },
   "icon": "Assets/icon.png",
   "entrypoints": {
     "win-x64": {
