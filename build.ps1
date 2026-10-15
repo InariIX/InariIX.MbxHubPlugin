@@ -13,12 +13,11 @@
 
     If the macrodeck-plugin CLI (https://docs.macro-deck.app/cli/) isn't installed, falls back to
     running the same `dotnet publish` commands macrodeck-build.json declares, one per RID, into
-    bin/publish/<rid>/ - you'll have runnable per-platform builds but not a packed .macroDeckPlugin,
-    since only the CLI knows how to assemble and sign that artifact.
+    bin/publish/<rid>/ - you'll have a runnable Windows x64 build but not a packed
+    .macroDeckPlugin, since only the CLI knows how to assemble and sign that artifact.
 
 .PARAMETER Rid
-    Build a single runtime identifier instead of all four declared in macrodeck-build.json
-    (win-x64, osx-arm64, linux-x64).
+    Build a single runtime identifier instead of the one declared in macrodeck-build.json (win-x64).
 
 .PARAMETER SkipValidate
     Skip the manifest validation step entirely (only relevant when the CLI is installed).
@@ -35,7 +34,7 @@
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('win-x64', 'osx-arm64', 'linux-x64')]
+    [ValidateSet('win-x64')]
     [string]$Rid,
 
     [switch]$SkipValidate,
@@ -46,7 +45,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
-$rids = if ($Rid) { @($Rid) } else { @('win-x64', 'osx-arm64', 'linux-x64') }
+$rids = if ($Rid) { @($Rid) } else { @('win-x64') }
 
 function Invoke-Checked {
     param([string]$Exe, [string[]]$CliArgs)
@@ -88,7 +87,7 @@ if ($cli) {
 else {
     Write-Warning @"
 macrodeck-plugin CLI not found on PATH - falling back to plain 'dotnet publish' per RID.
-This produces runnable per-platform builds under bin/publish/<rid>/, but NOT a packed
+This produces a runnable Windows x64 build under bin/publish/win-x64/, but NOT a packed
 .macroDeckPlugin artifact (only the CLI assembles and signs that).
 
 Install the CLI for the full build/pack/validate flow:

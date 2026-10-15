@@ -9,11 +9,11 @@
 #                                       (pass --publication for the stricter pre-publish check).
 #
 # If the macrodeck-plugin CLI (https://docs.macro-deck.app/cli/) isn't installed, falls back to the
-# same `dotnet publish` commands macrodeck-build.json declares, one per RID, into bin/publish/<rid>/ -
-# runnable per-platform builds, but not a packed .macroDeckPlugin (only the CLI assembles that).
+# same `dotnet publish` command macrodeck-build.json declares, into bin/publish/win-x64/ - a runnable
+# Windows x64 build, but not a packed .macroDeckPlugin (only the CLI assembles that).
 #
 # Usage:
-#   ./build.sh              # all four RIDs
+#   ./build.sh              # Windows x64
 #   ./build.sh win-x64      # a single RID
 #   ./build.sh --skip-validate
 #   ./build.sh --publication  # stricter check before actually publishing the plugin
@@ -28,7 +28,7 @@ for arg in "$@"; do
 	case "$arg" in
 	--skip-validate) skip_validate=true ;;
 	--publication) publication=true ;;
-	win-x64 | osx-arm64 | linux-x64) rid="$arg" ;;
+	win-x64) rid="$arg" ;;
 	*)
 		echo "Unknown argument: $arg" >&2
 		exit 1
@@ -36,7 +36,7 @@ for arg in "$@"; do
 	esac
 done
 
-rids=(win-x64 osx-arm64 linux-x64)
+rids=(win-x64)
 [ -n "$rid" ] && rids=("$rid")
 
 echo
@@ -70,7 +70,7 @@ if command -v macrodeck-plugin >/dev/null 2>&1; then
 else
 	cat >&2 <<'EOF'
 Warning: macrodeck-plugin CLI not found on PATH - falling back to plain 'dotnet publish' per RID.
-This produces runnable per-platform builds under bin/publish/<rid>/, but NOT a packed
+This produces a runnable Windows x64 build under bin/publish/win-x64/, but NOT a packed
 .macroDeckPlugin artifact (only the CLI assembles and signs that).
 
 Install the CLI for the full build/pack/validate flow:

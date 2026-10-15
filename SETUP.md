@@ -7,6 +7,7 @@ technical/architecture writeup see [README.md](README.md).
 
 ## Requirements
 
+- **Windows x64** for Macro Deck and this plugin. MusicBee and MBXHub are Windows-only.
 - **Macro Deck 3** (beta), any version `3.0.0` or a prerelease of it.
 - **MusicBee** with the **MBXHub** plugin installed and running. Get it from
   [mbxhub.com](https://mbxhub.com/download.html) if you don't have it yet.
@@ -15,7 +16,7 @@ technical/architecture writeup see [README.md](README.md).
 
 ## 1. Install the plugin
 
-1. Download the `.macroDeckPlugin` file for your platform from the
+1. Download the Windows x64 `.macroDeckPlugin` file from the
    [Releases](https://github.com/InariIX/InariIX.MbxHubPlugin/releases) page.
 2. In Macro Deck, open the plugin manager and install from the downloaded file.
 3. Restart Macro Deck if prompted.

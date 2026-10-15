@@ -10,14 +10,6 @@
     "win-x64": {
       "executable": "runtimes/win-x64/InariIX.MbxHubPlugin.dll",
       "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
-    },
-    "osx-arm64": {
-      "executable": "runtimes/osx-arm64/InariIX.MbxHubPlugin.dll",
-      "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
-    },
-    "linux-x64": {
-      "executable": "runtimes/linux-x64/InariIX.MbxHubPlugin.dll",
-      "runtime": { "kind": "FrameworkDependent", "dotnetVersion": "10.0" }
     }
   },
   "publisher": {
