@@ -5,7 +5,7 @@
   "name": "MBXHub (MusicBee)",
   "version": "0.1.5",
   "description": "Control MusicBee through MBXHub: transport, love toggle, shuffle, playlist selection, and a Music Player widget with album art and progress.",
-  "icon": "Assets/icon.svg",
+  "icon": "Assets/icon.png",
   "entrypoints": {
     "win-x64": {
       "executable": "runtimes/win-x64/InariIX.MbxHubPlugin.dll",
