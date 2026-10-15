@@ -4,19 +4,18 @@ using MacroDeck.Sdk.Actions;
 
 namespace InariIX.MbxHubPlugin.Actions;
 
-/// <summary>
-/// Toggles the love tag on whatever MusicBee is currently playing. MusicPlayerState (see
-/// MbxHubMusicPlayer) has no Loved field - confirmed against both the SDK's music player contract and
-/// MacroDeck.SampleMusicPlayerPlugin, which doesn't touch one either - so this lives as an ordinary
-/// action rather than something the built-in media widget can show a heart icon for.
-///
-/// Kept as a plain IActionDefinition rather than IStateProviderActionDefinition (a live two-state
-/// button reflecting loved/not-loved): no sample plugin in the SDK repo demonstrates that interface,
-/// so its exact members aren't confirmed. A plain toggle button plus the mbxhub_love variable (see
-/// MbxHubIntegration) covers the same need without guessing at an unverified contract.
-/// </summary>
-internal sealed class ToggleLoveAction(MbxHubIntegration integration) : IActionDefinition
+internal sealed class ToggleLoveAction(MbxHubIntegration integration)
+	: IActionDefinition, IStateProviderActionDefinition
 {
+	private const string LovedStateId = "loved";
+	private const string NotLovedStateId = "not-loved";
+
+	private static readonly IReadOnlyList<ActionStateDefinition> States =
+	[
+		new(LovedStateId, "Loved"),
+		new(NotLovedStateId, "Not loved")
+	];
+
 	public string Id => "toggle-love";
 
 	public LocalizedText Name => "Toggle love";
@@ -25,7 +24,24 @@ internal sealed class ToggleLoveAction(MbxHubIntegration integration) : IActionD
 
 	public IReadOnlyList<ActionParameter> Parameters { get; } = [];
 
+	public TimeSpan StatePollInterval => TimeSpan.FromSeconds(2);
+
 	public IActionExecutor CreateExecutor() => new Executor(integration);
+
+	public async Task<ActionStateSnapshot?> GetActionStateAsync(
+		IReadOnlyDictionary<string, object?> parameters,
+		CancellationToken cancellationToken)
+	{
+		if (integration.Client is not { } client)
+		{
+			return null;
+		}
+
+		var nowPlaying = await client.GetNowPlayingAsync(cancellationToken);
+		return nowPlaying is null
+			? null
+			: new ActionStateSnapshot(States, nowPlaying.Love ? LovedStateId : NotLovedStateId);
+	}
 
 	private sealed class Executor(MbxHubIntegration integration) : IActionExecutor
 	{

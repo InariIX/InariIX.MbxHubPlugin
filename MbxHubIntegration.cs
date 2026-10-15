@@ -100,17 +100,8 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 
 	// ---- IVariableProvider ------------------------------------------------------------------------
 
-	// Confirmed by reflecting the actual restored MacroDeck.Sdk.dll (3.0.0-preview.10): VariableDefinition
-	// isn't the simple record ProvidedVariable was - it's built via VariableDefinition.OnDemand(id, type)
-	// or .Eager(id, type, decimalPlaces, refreshInterval). VariableType has exactly three members (also
-	// confirmed via reflection): Text, Numeric, Boolean - no image/binary type, so album art stays
-	// widget-only (GetArtworkAsync on MbxHubMusicPlayer); there's no variable equivalent for it.
-	//
-	// Everything below is Eager rather than OnDemand: only the two Eager variables (position-seconds/
-	// position-text) ever showed as available in the host's variable list, while every OnDemand one
-	// showed "unavailable" - OnDemand most likely only populates once something actually binds to it,
-	// so nothing had ever triggered a ReadAsync call for them. Eager gets them refreshed on a timer
-	// regardless of whether anything is bound yet, matching the two that were already working.
+	// SDK beta.17 supports text, numeric, and boolean variables. Album artwork stays on the music
+	// player capability because it is not a variable value type.
 	public IReadOnlyList<VariableDefinition> Variables { get; } =
 	[
 		VariableDefinition.Eager("mbxhub-track", VariableType.Text, null, TimeSpan.FromSeconds(2)),
@@ -157,10 +148,7 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		var positionSeconds = nowPlaying.PositionMs / 1000.0;
 		var durationSeconds = nowPlaying.DurationMs / 1000.0;
 
-		// The progress variable carries Min/Max on the reading itself (VariableReading.Of(value, min,
-		// max, step), confirmed via reflection) rather than on the static VariableDefinition - Max has
-		// to track each track's own duration, which VariableDefinition can't express since it's built
-		// once at startup.
+		// The current track's duration determines the progress variable's maximum.
 		if (name == "mbxhub-position-seconds")
 		{
 			return VariableReading.Of(positionSeconds, 0, durationSeconds, 1);
