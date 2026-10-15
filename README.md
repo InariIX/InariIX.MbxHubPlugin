@@ -21,12 +21,13 @@ architecture, build process, and the API assumptions behind it.
 
 ## Setup
 
-1. Build with `./build.ps1` (Windows) or `./build.sh` (macOS/Linux) — see below — which packs a
-   `.macroDeckPlugin` artifact per platform via the `macrodeck-plugin` CLI (or falls back to plain
-   `dotnet publish` if the CLI isn't installed). Published framework-dependent per AGENTS.md's
-   convention (Macro Deck ships its own .NET 10 runtime with the host), not self-contained. The
-   CLI fills in `files[]` and `signature` itself from the packed artifact — never hand-author those
-   in `manifest.json`.
+1. Build the Windows x64 plugin with `./build.ps1` or `./build.sh`. The scripts pack a
+   `.macroDeckPlugin` artifact via the `macrodeck-plugin` CLI (or fall back to plain `dotnet publish`
+   if the CLI isn't installed). The plugin is framework-dependent (Macro Deck ships its own .NET 10
+   runtime with the host), not self-contained. The project defaults to Macro Deck 3 SDK
+   `3.0.0-beta.17`; override `MacroDeckSdkVersion` at build time to test another SDK version. The CLI
+   fills in `files[]` and `signature` itself from the packed artifact — never hand-author those in
+   `manifest.json`.
 2. Install in Macro Deck 3, then run the config flow: host (default `localhost`) and port (pre-filled
    `8082` since MBXHub's own default, 8080, is commonly already taken — check yours if unsure).
 3. Add the "Music player" widget and pick the MBXHub instance, or wire the actions to buttons directly.
@@ -92,4 +93,3 @@ shows up later: swap the `-match` pattern for a keyword from the missing type's 
 `Macro-Deck-Sample-Plugins` repo demonstrates that interface, so its exact members weren't confirmed
 before writing this — worth checking with the reflection approach above, or `sdk-reference.md` in the
 main Macro Deck 3 repo (private at the time this was written), before implementing it.
-

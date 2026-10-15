@@ -11,7 +11,7 @@
              because of exactly that. Bump this pin by hand when the host requires a newer minimum -
              floating cannot be trusted to do it correctly here. Override per-build if needed with
              `dotnet build -p:MacroDeckSdkVersion=<version>`. -->
-        <MacroDeckSdkVersion Condition="'$(MacroDeckSdkVersion)' == ''">3.0.0-beta.11</MacroDeckSdkVersion>
+        <MacroDeckSdkVersion Condition="'$(MacroDeckSdkVersion)' == ''">3.0.0-beta.17</MacroDeckSdkVersion>
     </PropertyGroup>
 
     <ItemGroup>
