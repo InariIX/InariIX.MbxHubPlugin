@@ -1,63 +1,39 @@
-# InariIX.MbxHubPlugin
+# MBXHub for Macro Deck 3
 
-Macro Deck 3 plugin controlling MusicBee through [MBXHub](https://mbxhub.com) (docs:
-https://mbxhub.com/docs.html, API: https://mbxhub.com/api.html).
+Control MusicBee through MBXHub with playback actions, playlist selection, live status, and a music player widget.
 
-**Just want to install and use this?** See [SETUP.md](SETUP.md) instead — this file covers the
-architecture, build process, and the API assumptions behind it.
+## Requirements
 
-## What it does
+- Windows x64.
+- Macro Deck 3.
+- MusicBee with the MBXHub plugin installed and running. Download MBXHub from [mbxhub.com](https://mbxhub.com/download.html).
+- Network access from Macro Deck to the computer running MusicBee and MBXHub.
 
-This plugin controls MusicBee only through MBXHub. It provides basic playback controls, a Loved
-toggle, and playlist selection. Party Mode and AutoQ are not implemented. The plugin's code was
-developed with AI assistance.
+## Install and connect
 
-The Loved toggle is a standalone action and variable, not part of the Music Player widget. For it to
-work, make sure **Tag edits** and **Modify** are writable (not read-only) in MBXHub's **API Access**
-settings.
+1. Download the Windows x64 `.macroDeckPlugin` file from [Releases](https://github.com/InariIX/InariIX.MbxHubPlugin/releases).
+2. In Macro Deck, open the plugin manager and install the downloaded file. Restart Macro Deck if prompted.
+3. When the plugin asks for a connection, enter the host name or IP address of the computer running MBXHub. Enter the port configured in MBXHub. The suggested port is `8082`; MBXHub may instead be using its default, `8080`.
+4. Add the **Music player** widget and select the MBXHub player, or add the plugin's actions to buttons.
 
-The Music Player widget provides album art, playback progress, transport controls, and playlist
-browsing.
+Macro Deck and MusicBee may be on different computers, as long as the MBXHub host and port are reachable from Macro Deck.
 
-## Setup
+## Features
 
-1. Build the Windows x64 plugin with `./build.ps1` or `./build.sh`. The scripts pack a
-   `.macroDeckPlugin` artifact via the `macrodeck-plugin` CLI (or fall back to plain `dotnet publish`
-   if the CLI isn't installed). The plugin is framework-dependent (Macro Deck ships its own .NET 10
-   runtime with the host), not self-contained. The project defaults to Macro Deck 3 SDK
-   `3.0.0-beta.17`; override `MacroDeckSdkVersion` at build time to test another SDK version. The CLI
-   fills in `files[]` and `signature` itself from the packed artifact — never hand-author those in
-   `manifest.json`.
-2. Install in Macro Deck 3, then run the config flow: host (default `localhost`) and port (pre-filled
-   `8082` since MBXHub's own default, 8080, is commonly already taken — check yours if unsure).
-3. Add the "Music player" widget and pick the MBXHub instance, or wire the actions to buttons directly.
+The Music player widget shows album art and playback progress and provides transport, volume, shuffle, repeat, and playlist controls. You can also use separate actions for play, pause, next and previous track, repeat, shuffle, volume, love, and playlist playback.
 
-## Known gaps / things to verify before relying on this in production
+The plugin provides variables for track, artist, album, playback state, love, shuffle, repeat, and playback progress. Use them to show live status on your Macro Deck buttons.
 
-MBXHub has no authentication, so this client is a plain unauthenticated `HttpClient` — fine on a
-trusted LAN, worth knowing if you're exposing the host more broadly.
+To use the love action, open **API Access** in MBXHub settings and make sure **Tag edits** and **Modify** are not read-only.
 
-A few call shapes are best-effort inferences rather than confirmed against MBXHub's own docs, each
-flagged with a comment at the point of use:
+## Limitations and network use
 
-- **`GET /player/volume` and `GET /player/shuffle` response field names** (`Mbx/MbxHubModels.cs`) —
-  the docs show the `PUT` body but not the matching `GET` response shape; assumed symmetric.
-- **`PUT /player/position` body field name** (`Mbx/MbxHubClient.cs`, `SeekAsync`) — not shown in the
-  docs at all; assumed to follow the same convention as volume.
-- **Repeat mode SDK-enum mapping** (`Player/MbxHubMusicPlayer.cs`, `SetRepeatModeAsync`) — MBXHub's
-  accepted values are `"none"` / `"one"` / `"all"` (also exposed through the `mbxhub-repeat` variable).
-  These map directly to the SDK beta.17 `RepeatMode.Off`, `Track`, and `Context` values.
-- **`GET /playlists` item field name** — confirmed (`name`, not `title`) via HALRAD's own MCP sample
-  in `halrad-com/mbxhub`; `title` is kept only as a defensive fallback, not because it's in doubt.
+Party Mode and AutoQ are not supported. MBXHub does not provide authentication, so this plugin makes unauthenticated HTTP requests to the host and port you configure. Use it only on a trusted network and do not expose MBXHub to untrusted networks.
 
-None of these will crash the plugin if wrong — they'll just no-op or read back an unexpected value —
-but worth a quick check against a live MBXHub instance (e.g. `curl http://localhost:8082/player/volume`)
-before you rely on volume/shuffle/seek/repeat.
+## Troubleshooting
 
-## SDK capabilities
+- **The plugin cannot connect:** Check that MusicBee and MBXHub are running, and verify the configured host and port in MBXHub.
+- **Love does not work:** Check that **Tag edits** and **Modify** are writable in MBXHub's **API Access** settings.
+- **The player is unavailable after startup:** Recheck the connection settings and restart Macro Deck after MBXHub is running.
 
-The project pins the Macro Deck packages to `3.0.0-beta.17`. The standalone volume action uses the
-SDK's native slider parameter, and the Loved action reports live Loved and Not loved states through
-`IStateProviderActionDefinition`. It reports no state when MBXHub is disconnected or no track is
-playing. The Music Player widget continues to provide its own transport, volume, shuffle, repeat, and
-playlist controls.
+For implementation notes and build instructions, see [DEVELOPMENT.md](DEVELOPMENT.md).
