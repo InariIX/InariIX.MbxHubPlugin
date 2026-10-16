@@ -1,3 +1,4 @@
+using System.Globalization;
 using MacroDeck.Localization;
 using MacroDeck.Sdk.Actions;
 using MacroDeck.Sdk.ConfigFlow;
@@ -38,16 +39,15 @@ internal sealed class MbxHubConfigFlow : IConfigFlow
 				new Dictionary<string, LocalizedText> { [HostFieldName] = required }));
 		}
 
-		// Kept as a Text field rather than ActionParameter.Number: the samples only show Number used
-		// for an unconstrained event-payload value, never with min/max/default on a config step, so a
-		// plain parsed string avoids guessing at an unconfirmed overload.
-		// Default 8082, not MBXHub's own 8080 default: 8080 is commonly already in use (confirmed on
-		// this very machine), so an actual-environment-matched default saves a step more often than a
-		// generic one would.
-		var port = input.GetValueOrDefault(PortFieldName) is string { Length: > 0 } portText
-			&& int.TryParse(portText, out var parsedPort)
-				? parsedPort
-				: 8082;
+		var portText = input.GetValueOrDefault(PortFieldName) as string;
+		if (!int.TryParse(portText?.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var port)
+			|| port is < 1 or > 65535)
+		{
+			const string invalidPort = "Port must be a number between 1 and 65535.";
+			return Task.FromResult(ConfigFlowResult.Error(BuildStep(),
+				invalidPort,
+				new Dictionary<string, LocalizedText> { [PortFieldName] = invalidPort }));
+		}
 
 		// Plain string, not LocalizedText: the host stores this as the config entry's title and the
 		// user can rename it afterward, so it only needs to be written once, in the plugin's own
