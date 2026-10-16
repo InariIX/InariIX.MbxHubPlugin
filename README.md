@@ -11,10 +11,9 @@ Control MusicBee through MBXHub with playback actions, playlist selection, live 
 
 ## Install and connect
 
-1. Download the Windows x64 `.macroDeckPlugin` file from [Releases](https://github.com/InariIX/InariIX.MbxHubPlugin/releases).
-2. In Macro Deck, open the plugin manager and install the downloaded file. Restart Macro Deck if prompted.
-3. When the plugin asks for a connection, enter the host name or IP address of the computer running MBXHub. Enter the port configured in MBXHub. The suggested port is `8082`; MBXHub may instead be using its default, `8080`.
-4. Add the **Music player** widget and select the MBXHub player, or add the plugin's actions to buttons.
+1. Install the plugin from its [Macro Deck Store listing](https://macro-deck.app/store/com.inariix.mbxhub-plugin).
+2. When the plugin asks for a connection, enter the host name or IP address of the computer running MBXHub. Enter the port configured in MBXHub. The suggested port is `8082`; MBXHub may instead be using its default, `8080`.
+3. Add the **Music player** widget and select the MBXHub player, or add the plugin's actions to buttons.
 
 Macro Deck and MusicBee may be on different computers, as long as the MBXHub host and port are reachable from Macro Deck.
 
