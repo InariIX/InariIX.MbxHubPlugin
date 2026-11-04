@@ -10,8 +10,8 @@ Use `./build.ps1` on Windows or `./build.sh` where Bash is available. Both scrip
 back to an unpacked `dotnet publish`, which is not a Store-ready artifact.
 
 The plugin is framework-dependent and uses the .NET 10 runtime shipped with Macro Deck. The project
-pins Macro Deck packages to `3.0.0-beta.17`; keep the package set aligned with the current Store
-publishing requirements.
+pins Macro Deck packages and the release workflow's plugin CLI to stable `3.0.0`; keep them aligned
+with the current Store publishing requirements.
 
 ## Architecture
 
