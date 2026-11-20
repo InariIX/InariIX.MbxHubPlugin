@@ -1,5 +1,7 @@
 # MBXHub for Macro Deck 3
 
+<a href="https://macro-deck.app/store/com.inariix.mbxhub-plugin"><img alt="Open in the Macro Deck Store" src="https://assets.macro-deck.app/branding/Open%20in%20the%20Macro%20Deck%20Store%20Badge%20Dark.png" height="56"></a>
+
 Control MusicBee through MBXHub with playback actions, playlist selection, live status, and a music player widget.
 
 ## Requirements
