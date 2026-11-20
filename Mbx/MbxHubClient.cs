@@ -43,6 +43,12 @@ internal sealed class MbxHubClient : IDisposable
 		return envelope?.Data;
 	}
 
+	public async Task<MbxHubVersion?> GetVersionAsync(CancellationToken cancellationToken)
+	{
+		var envelope = await GetAsync<MbxEnvelope<MbxHubVersion>>("system/version", cancellationToken);
+		return envelope?.Data;
+	}
+
 	public async Task<byte[]?> GetArtworkAsync(CancellationToken cancellationToken)
 	{
 		using var response = await _http.GetAsync("nowplaying/artwork", cancellationToken);

@@ -17,6 +17,19 @@ internal sealed class MbxEnvelope<T>
 	public T? Data { get; set; }
 }
 
+/// <summary>Version details returned by GET /system/version.</summary>
+internal sealed class MbxHubVersion
+{
+	[JsonPropertyName("version")]
+	public string? Version { get; set; }
+
+	[JsonPropertyName("displayVersion")]
+	public string? DisplayVersion { get; set; }
+
+	[JsonPropertyName("host")]
+	public string? Host { get; set; }
+}
+
 /// <summary>Shape of GET /nowplaying's "data" object, per the documented example response.</summary>
 internal sealed class MbxNowPlaying
 {
