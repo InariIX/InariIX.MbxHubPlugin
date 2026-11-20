@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Globalization;
 using InariIX.MbxHubPlugin.Actions;
 using InariIX.MbxHubPlugin.Config;
 using InariIX.MbxHubPlugin.Mbx;
@@ -111,9 +113,18 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		VariableDefinition.Eager("mbxhub-love", VariableType.Boolean, null, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-shuffle", VariableType.Boolean, null, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-repeat", VariableType.Text, null, TimeSpan.FromSeconds(2)),
+		VariableDefinition.Eager("mbxhub_volume", VariableType.Numeric, 0, TimeSpan.FromSeconds(2)) with
+		{
+			Id = "volume",
+			Unit = "%",
+			SemanticKind = VariableSemanticKinds.Percentage,
+			Write = new VariableWriteCapability()
+		},
 		VariableDefinition.Eager("mbxhub-duration-seconds", VariableType.Numeric, 0, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-position-seconds", VariableType.Numeric, 0, TimeSpan.FromSeconds(1)),
-		VariableDefinition.Eager("mbxhub-position-text", VariableType.Text, null, TimeSpan.FromSeconds(1))
+		VariableDefinition.Eager("mbxhub-position-text", VariableType.Text, null, TimeSpan.FromSeconds(1)),
+		VariableDefinition.Eager("mbxhub-version", VariableType.Text, null, TimeSpan.FromMinutes(5)),
+		VariableDefinition.Eager("mbxhub-musicbee-version", VariableType.Text, null, TimeSpan.FromMinutes(5))
 	];
 
 	/// <summary>An unresolved client (not configured yet, or the config flow hasn't run) answers
@@ -123,6 +134,15 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		if (_client is null)
 		{
 			return VariableReading.Of(null);
+		}
+
+		if (name is "mbxhub-version" or "mbxhub-musicbee-version")
+		{
+			var version = await _client.GetVersionAsync(cancellationToken);
+			var versionValue = name == "mbxhub-version"
+				? version?.DisplayVersion ?? version?.Version
+				: GetLocalMusicBeeVersion(version?.Host);
+			return VariableReading.Of(versionValue);
 		}
 
 		// Shuffle and repeat live on different MBXHub endpoints than everything else here, so they're
@@ -137,6 +157,12 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		{
 			var repeatRaw = await _client.GetRepeatRawAsync(cancellationToken);
 			return VariableReading.Of(repeatRaw);
+		}
+
+		if (name == "volume")
+		{
+			var volume = await _client.GetVolumeAsync(cancellationToken);
+			return VariableReading.Of(Math.Clamp(volume, 0, 100), 0, 100, 1);
 		}
 
 		var nowPlaying = await _client.GetNowPlayingAsync(cancellationToken);
@@ -167,6 +193,60 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		};
 
 		return VariableReading.Of(value);
+	}
+
+	public async ValueTask<VariableWriteResult> SetValueAsync(
+		string name,
+		object? value,
+		CancellationToken cancellationToken = default)
+	{
+		if (!string.Equals(name, "volume", StringComparison.Ordinal))
+		{
+			return VariableWriteResult.NotFound();
+		}
+
+		if (_client is not { } client)
+		{
+			return VariableWriteResult.Unavailable();
+		}
+
+		if (value is not (double or int or long))
+		{
+			return VariableWriteResult.InvalidValue();
+		}
+
+		var numericValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+		if (!double.IsFinite(numericValue) || numericValue < 0 || numericValue > 100)
+		{
+			return VariableWriteResult.InvalidValue();
+		}
+
+		var volume = (int)Math.Round(numericValue, MidpointRounding.AwayFromZero);
+		await client.SetVolumeAsync(volume, cancellationToken);
+		return VariableWriteResult.Applied();
+	}
+
+	private static string? GetLocalMusicBeeVersion(string? mbxHubHost)
+	{
+		if (!string.Equals(mbxHubHost, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
+		{
+			return null;
+		}
+
+		string? version = null;
+		foreach (var process in Process.GetProcessesByName("MusicBee"))
+		{
+			using (process)
+			{
+				if (version is null && process.MainModule?.FileName is { } executablePath)
+				{
+					var fileVersion = FileVersionInfo.GetVersionInfo(executablePath);
+					version = fileVersion.ProductVersion ?? fileVersion.FileVersion;
+				}
+			}
+		}
+
+		return version;
 	}
 
 	private static string FormatTime(double totalSeconds)

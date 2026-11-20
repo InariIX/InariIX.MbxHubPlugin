@@ -5,7 +5,7 @@
         <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
         <!-- Keep the Macro Deck package set aligned with the stable host release. Override per-build
              if needed with `dotnet build -p:MacroDeckSdkVersion=<version>`. -->
-        <MacroDeckSdkVersion Condition="'$(MacroDeckSdkVersion)' == ''">3.0.0</MacroDeckSdkVersion>
+        <MacroDeckSdkVersion Condition="'$(MacroDeckSdkVersion)' == ''">3.0.2</MacroDeckSdkVersion>
     </PropertyGroup>
 
     <ItemGroup>
