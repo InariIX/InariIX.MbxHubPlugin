@@ -65,6 +65,7 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 			// No configured connection yet (plugin just installed, flow not completed). Actions and
 			// the music player provider degrade to "not connected" until the user runs the config
 			// flow - GetPlayer/InternalClient return null until then rather than throwing.
+			await context.Variables.NotifyDeclarationsChangedAsync();
 			return;
 		}
 
@@ -74,6 +75,7 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		var port = int.TryParse(portText, out var parsedPort) ? parsedPort : 8082;
 
 		_client = new MbxHubClient(host, port);
+		await context.Variables.NotifyDeclarationsChangedAsync();
 	}
 
 	public Task ShutdownAsync()
@@ -104,7 +106,7 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 
 	// SDK beta.17 supports text, numeric, and boolean variables. Album artwork stays on the music
 	// player capability because it is not a variable value type.
-	public IReadOnlyList<VariableDefinition> Variables { get; } =
+	public IReadOnlyList<VariableDefinition> Variables =>
 	[
 		VariableDefinition.Eager("mbxhub-track", VariableType.Text, null, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-artist", VariableType.Text, null, TimeSpan.FromSeconds(2)),
@@ -113,19 +115,22 @@ public sealed class MbxHubIntegration : IPluginIntegration, IMusicPlayerProvider
 		VariableDefinition.Eager("mbxhub-love", VariableType.Boolean, null, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-shuffle", VariableType.Boolean, null, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-repeat", VariableType.Text, null, TimeSpan.FromSeconds(2)),
-		VariableDefinition.Eager("mbxhub_volume", VariableType.Numeric, 0, TimeSpan.FromSeconds(2)) with
-		{
-			Id = "volume",
-			Unit = "%",
-			SemanticKind = VariableSemanticKinds.Percentage,
-			Write = new VariableWriteCapability()
-		},
+		CreateVolumeVariable(_client is not null),
 		VariableDefinition.Eager("mbxhub-duration-seconds", VariableType.Numeric, 0, TimeSpan.FromSeconds(2)),
 		VariableDefinition.Eager("mbxhub-position-seconds", VariableType.Numeric, 0, TimeSpan.FromSeconds(1)),
 		VariableDefinition.Eager("mbxhub-position-text", VariableType.Text, null, TimeSpan.FromSeconds(1)),
 		VariableDefinition.Eager("mbxhub-version", VariableType.Text, null, TimeSpan.FromMinutes(5)),
 		VariableDefinition.Eager("mbxhub-musicbee-version", VariableType.Text, null, TimeSpan.FromMinutes(5))
 	];
+
+	private static VariableDefinition CreateVolumeVariable(bool writable)
+		=> VariableDefinition.Eager("mbxhub_volume", VariableType.Numeric, 0, TimeSpan.FromSeconds(2)) with
+		{
+			Id = "volume",
+			Unit = "%",
+			SemanticKind = VariableSemanticKinds.Percentage,
+			Write = writable ? new VariableWriteCapability() : null
+		};
 
 	/// <summary>An unresolved client (not configured yet, or the config flow hasn't run) answers
 	/// VariableReading.Of(null) rather than throwing - the host renders a null Value as "unavailable".</summary>
