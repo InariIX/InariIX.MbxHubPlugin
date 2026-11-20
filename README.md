@@ -20,7 +20,7 @@ Macro Deck and MusicBee may be on different computers, as long as the MBXHub hos
 
 ## Features
 
-The Music player widget shows album art and playback progress and provides transport, volume, shuffle, repeat, and playlist controls. You can also add a Macro Deck Slider widget bound to the writable `mbxhub_volume` variable to control MusicBee's volume. Separate actions are available for play, pause, next and previous track, repeat, shuffle, volume, love, and playlist playback.
+The Music player widget shows album art and playback progress and provides transport, volume, shuffle, repeat, and playlist controls. After configuring MBXHub, you can add a Macro Deck Slider widget bound to the writable `mbxhub_volume` variable to control MusicBee's volume. Separate actions are available for play, pause, next and previous track, repeat, shuffle, volume, love, and playlist playback.
 
 The plugin provides variables for track, artist, album, playback state, love, shuffle, repeat, volume, and playback progress. Use `mbxhub-version` to show the MBXHub version. `mbxhub-musicbee-version` shows the MusicBee version when Macro Deck and MBXHub run on the same computer; it is unavailable for remote MBXHub hosts because the API does not expose MusicBee's version.
 

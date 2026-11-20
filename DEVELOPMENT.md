@@ -41,5 +41,7 @@ The volume action uses the SDK's slider parameter. The love action reports loved
 states through `IStateProviderActionDefinition`; it reports no state when MBXHub is disconnected or
 no track is playing.
 
-The writable `mbxhub_volume` numeric variable is also exposed for Macro Deck's Slider widget. Its
-read range is 0-100%, and writes are rounded to the nearest whole MusicBee volume percentage.
+After MBXHub is configured, the `mbxhub_volume` numeric variable is writable for Macro Deck's Slider
+widget. Its read range is 0-100%, and writes are rounded to the nearest whole MusicBee volume
+percentage. Its write capability is omitted before configuration, when no real volume value is
+available to read.
